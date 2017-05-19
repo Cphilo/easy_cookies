@@ -4,12 +4,12 @@ var downloadable = "";
 var popup = "";
 chrome.tabs.getSelected(null, function(tab) {
   domain = getDomain(tab.url)  
-  console.log("domain=["+domain+"]")
+  // console.log("domain=["+domain+"]")
   chrome.cookies.getAll({}, function(cookies) {
     for (var i in cookies) {
       cookie = cookies[i];
       if(reserveCookie(cookie.domain, domain)) {
-        console.log(cookie.domain);    
+        // console.log(cookie.domain);    
         content += escapeForPre(cookie.domain);
         content += "\t";
         content += escapeForPre((!cookie.hostOnly).toString().toUpperCase());
