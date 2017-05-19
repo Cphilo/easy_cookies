@@ -4,25 +4,26 @@ var downloadable = "";
 var popup = "";
 chrome.tabs.getSelected(null, function(tab) {
   domain = getDomain(tab.url)  
-  //console.log("domain=["+domain+"]")
+  console.log("domain=["+domain+"]")
   chrome.cookies.getAll({}, function(cookies) {
     for (var i in cookies) {
-      cookie = cookies[i]; 
-      if (cookie.domain.indexOf(domain) != -1) {     
-      content += escapeForPre(cookie.domain);
-      content += "\t";
-      content += escapeForPre((!cookie.hostOnly).toString().toUpperCase());
-      content += "\t";     
-      content += escapeForPre(cookie.path); 
-      content += "\t";     
-      content += escapeForPre(cookie.secure.toString().toUpperCase());
-      content += "\t";     
-      content += escapeForPre(cookie.expirationDate ? Math.round(cookie.expirationDate) : "0");
-      content += "\t";     
-      content += escapeForPre(cookie.name);
-      content += "\t";     
-      content += escapeForPre(cookie.value);
-      content += "\n";
+      cookie = cookies[i];
+      if(reserveCookie(cookie.domain, domain)) {
+        console.log(cookie.domain);    
+        content += escapeForPre(cookie.domain);
+        content += "\t";
+        content += escapeForPre((!cookie.hostOnly).toString().toUpperCase());
+        content += "\t";     
+        content += escapeForPre(cookie.path); 
+        content += "\t";     
+        content += escapeForPre(cookie.secure.toString().toUpperCase());
+        content += "\t";     
+        content += escapeForPre(cookie.expirationDate ? Math.round(cookie.expirationDate) : "0");
+        content += "\t";     
+        content += escapeForPre(cookie.name);
+        content += "\t";     
+        content += escapeForPre(cookie.value);
+        content += "\n";
       }
     }
     downloadable += "# HTTP Cookie File for domains related to " + escapeForPre(domain) + ".\n";
@@ -48,6 +49,20 @@ function escapeForPre(text) {
                      .replace(/>/g, "&gt;")
                      .replace(/"/g, "&quot;")
                      .replace(/'/g, "&#039;");
+}
+
+function reserveCookie(domain, rootDomain) {
+  function isempty(x) {
+    return (x!=='');
+  }
+  domain_parts = domain.split('.').filter(isempty).reverse();
+  root_domain_parts = rootDomain.split('.').filter(isempty).reverse();
+  for(var i in root_domain_parts) {
+    if(root_domain_parts[i] !== domain_parts[i]) {
+      return false;
+    }
+  }
+  return true;
 }
 
 function getDomain(url) {
