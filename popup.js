@@ -39,7 +39,9 @@ chrome.tabs.getSelected(null, function(tab) {
     popup += "# Example:  wget -x <b>--load-cookies cookies.txt</b> " + escapeForPre(tab.url) + "\n"; 
     popup += "#\n";
 
-    document.write("<pre>\n"+ popup + content + "</pre>");
+    var preEle = document.createElement("pre");
+    preEle.innerHTML = popup + content; 
+    document.getElementById('content').appendChild(preEle);
   });      
 })
 
