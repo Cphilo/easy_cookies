@@ -46,7 +46,8 @@ chrome.tabs.getSelected(null, function(tab) {
 })
 
 function escapeForPre(text) {
-  return String(text).replace(/&/g, "&amp;")
+  return String(text).replace(/\t/g, " ")
+                     .replace(/&/g, "&amp;")
                      .replace(/</g, "&lt;")
                      .replace(/>/g, "&gt;")
                      .replace(/"/g, "&quot;")
